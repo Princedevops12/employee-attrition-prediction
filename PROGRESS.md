@@ -5,14 +5,16 @@
 ### Sub-tasks
 
 #### 1.1 Initialize Git Repository
+
 - **Status**: ✅ COMPLETED
-- **Details**: 
+- **Details**:
   - Initialized empty Git repository
   - Configured git user (Attrition Dev)
   - Created `.gitignore` with comprehensive ignore patterns
   - First commit made: "Module 1: Initial repo setup..."
 
 #### 1.2 Create Folder Structure
+
 - **Status**: ✅ COMPLETED
 - **Details**:
   - Created `/ml` - ML model development
@@ -22,6 +24,7 @@
   - All directories visible in git status
 
 #### 1.3 Create Configuration Files
+
 - **Status**: ✅ COMPLETED
 - **Details**:
   - `.vscode/settings.json` - Python interpreter, formatting, linting
@@ -31,6 +34,7 @@
   - `backend/.env.example` - Environment variable template
 
 #### 1.4 Create Requirements Files & Documentation
+
 - **Status**: ✅ COMPLETED
 - **Details**:
   - `ml/requirements.txt` - pandas, scikit-learn, xgboost, jupyter
@@ -41,6 +45,7 @@
   - Module-specific READMEs
 
 #### 1.5 Python Virtual Environments
+
 - **Status**: ✅ IN PROGRESS
 - **Details**:
   - ML venv created and pip upgrade initiated
@@ -52,7 +57,8 @@
 ### Module 1 Status: ✅ COMPLETE (Environment setup in final stages)
 
 **Checkpoint**: Initial commit made successfully
-**Next Steps**: 
+**Next Steps**:
+
 1. Wait for pip/npm installations to complete
 2. Verify venv activation works in integrated terminal
 3. Commit environment setup
@@ -85,6 +91,7 @@
 ### Sub-tasks
 
 #### 6.1 Project Configuration
+
 - **Status**: ✅ COMPLETED
 - **Files**:
   - `frontend/vite.config.ts` - Vite build config with API proxy
@@ -95,6 +102,7 @@
   - `frontend/.env.local` - Environment variables template
 
 #### 6.2 Core Pages
+
 - **Status**: ✅ COMPLETED
 - **Files**:
   - `PredictionPage.tsx` - Employee attrition prediction form with results
@@ -102,6 +110,7 @@
   - `EmployeesPage.tsx` - CRUD operations for employee records
 
 #### 6.3 Components
+
 - **Status**: ✅ COMPLETED
 - **Components**:
   - `Navbar.tsx` - Navigation with page switching and dark mode
@@ -109,12 +118,14 @@
   - `RiskIndicator.tsx` - Reusable risk visualization component
 
 #### 6.4 Services & Integration
+
 - **Status**: ✅ COMPLETED
 - **Files**:
   - `services/api.ts` - Full API client with type-safe interfaces
   - Endpoints: predictions, employees, model metrics, health check
 
 #### 6.5 Styling & Layout
+
 - **Status**: ✅ COMPLETED
 - **Details**:
   - Tailwind CSS for utility-first styling
@@ -124,6 +135,7 @@
   - Lucide React icons throughout
 
 #### 6.6 Entry Point
+
 - **Status**: ✅ COMPLETED
 - **Files**:
   - `src/main.tsx` - React entry point
@@ -132,6 +144,7 @@
   - `index.html` - HTML template
 
 ### Module 6 Status: ✅ COMPLETE
+
 **Note**: Full React frontend implemented with all UI components, styling, and API integration ready for backend.
 **Next**: Test integration with running backend API
 
@@ -140,6 +153,7 @@
 ### Sub-tasks
 
 #### 2.1 Data Acquisition Script
+
 - **Status**: ✅ COMPLETED
 - **File**: `ml/acquire_data.py`
 - **Details**:
@@ -149,6 +163,7 @@
   - Features all required columns: Age, Income, Tenure, Satisfaction, etc.
 
 #### 2.2 Exploratory Data Analysis
+
 - **Status**: ✅ COMPLETED (Script Created)
 - **File**: `ml/acquire_data.py` - `explore_data()` function
 - **Details**:
@@ -160,6 +175,7 @@
   - EDA report generation (JSON)
 
 #### 2.3 Preprocessing Pipeline
+
 - **Status**: ✅ COMPLETED
 - **File**: `ml/preprocessing.py`
 - **Details**:
@@ -171,6 +187,7 @@
   - Preprocessor serialization (joblib)
 
 #### 2.4 Model Training Pipeline
+
 - **Status**: ✅ COMPLETED
 - **File**: `ml/train.py`
 - **Details**:
@@ -184,6 +201,7 @@
   - Model and metrics serialization
 
 #### 2.5 Inference Script
+
 - **Status**: ✅ COMPLETED
 - **File**: `ml/predict.py`
 - **Details**:
@@ -194,6 +212,7 @@
   - Confidence scoring
 
 ### Module 2 Status: 🔄 IN PROGRESS
+
 **Note**: Scripts created, ready for execution once Python environment setup complete.
 **Next**: Execute `acquire_data.py` → `train.py` → verify with `predict.py`
 
@@ -204,8 +223,9 @@
 ### Sub-tasks
 
 #### 3.1 Backend Application Structure
+
 - **Status**: ✅ COMPLETED
-- **Files**: 
+- **Files**:
   - `backend/app/main.py` - FastAPI app with CORS, lifespan, routers
   - `backend/app/database.py` - SQLAlchemy setup with SQLite/PostgreSQL support
   - `backend/app/models.py` - ORM models (Employee, Prediction, ModelMetrics)
@@ -215,6 +235,7 @@
   - `backend/app/routes/employees.py` - Employee CRUD operations
 
 #### 3.2 Database Models
+
 - **Status**: ✅ COMPLETED
 - **Models**:
   - `Employee` - Employee records with personal/job details
@@ -223,6 +244,7 @@
   - Relationships and cascade delete configured
 
 #### 3.3 API Endpoints
+
 - **Status**: ✅ COMPLETED (Structure)
 - **Endpoints**:
   - `GET /api/health` - Health check
@@ -237,6 +259,7 @@
   - `GET /api/employees/department/{dept}/stats` - Department statistics
 
 #### 3.4 Testing Structure
+
 - **Status**: ✅ COMPLETED
 - **Files**:
   - `backend/tests/test_health.py` - Unit tests for health endpoint
@@ -244,6 +267,7 @@
   - Test structure ready for pytest execution
 
 ### Module 3 Status: 🔄 IN PROGRESS (Environment setup pending)
+
 **Structure complete and ready**: All backend code written, dependencies configured, awaiting Python venv completion and testing.
 
 ---
@@ -257,16 +281,19 @@
 ## Installation Status
 
 ### ML Module
+
 - Python venv: ✅ Created
 - Dependencies: ⏳ Installing (pandas, numpy, scikit-learn, xgboost, jupyter)
 - ML scripts: ✅ Complete (acquire_data.py, preprocessing.py, train.py, predict.py)
 
 ### Backend Module
+
 - Python venv: ✅ Created
 - Dependencies: ⏳ Installing (fastapi, sqlalchemy, alembic, pytest, httpx)
 - Backend code: ✅ Complete (all routes, models, schemas, database)
 
 ### Frontend Module
+
 - Node.js: ✅ Ready
 - npm install: ⏳ Initiated
 - Frontend code: ⏳ To be created (React components, pages, services)
@@ -294,6 +321,5 @@
 - **CORS** configured for localhost dev (3000, 5173)
 - **Pydantic v2** with proper validation and JSON schemas
 - **SQLAlchemy 2.0** with async ready (current using sync)
-
 
 ---

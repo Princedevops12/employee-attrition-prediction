@@ -1,7 +1,11 @@
-import { useState } from 'react'
-import { apiService, PredictionRequest, PredictionResponse } from '../services/api'
-import { RiskIndicator } from '../components/RiskIndicator'
-import { Loader, Send } from 'lucide-react'
+import { useState } from "react";
+import {
+  apiService,
+  PredictionRequest,
+  PredictionResponse,
+} from "../services/api";
+import { RiskIndicator } from "../components/RiskIndicator";
+import { Loader, Send } from "lucide-react";
 
 export default function PredictionPage() {
   const [formData, setFormData] = useState<PredictionRequest>({
@@ -13,50 +17,70 @@ export default function PredictionPage() {
     total_working_years: 15,
     job_satisfaction: 3,
     work_life_balance: 3,
-    job_role: 'Sales Executive',
-    department: 'Sales',
+    job_role: "Sales Executive",
+    department: "Sales",
     distance_from_home: 5,
-    over_time: 'No',
-  })
+    over_time: "No",
+  });
 
-  const [prediction, setPrediction] = useState<PredictionResponse | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [prediction, setPrediction] = useState<PredictionResponse | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
       ...prev,
-      [name]: ['age', 'monthly_income', 'years_at_company', 'years_in_current_role',
-              'years_with_curr_manager', 'total_working_years', 'job_satisfaction',
-              'work_life_balance', 'distance_from_home'].includes(name) ? parseInt(value) : value,
-    }))
-  }
+      [name]: [
+        "age",
+        "monthly_income",
+        "years_at_company",
+        "years_in_current_role",
+        "years_with_curr_manager",
+        "total_working_years",
+        "job_satisfaction",
+        "work_life_balance",
+        "distance_from_home",
+      ].includes(name)
+        ? parseInt(value)
+        : value,
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
-    setPrediction(null)
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setPrediction(null);
 
     try {
-      const result = await apiService.predictSingle(formData)
-      setPrediction(result)
+      const result = await apiService.predictSingle(formData);
+      setPrediction(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to get prediction')
+      setError(err instanceof Error ? err.message : "Failed to get prediction");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const departments = ['Sales', 'Research & Development', 'Human Resources']
-  const jobRoles = ['Sales Executive', 'Research Scientist', 'Laboratory Technician',
-                    'Manufacturing Director', 'Healthcare Representative', 'Manager']
+  const departments = ["Sales", "Research & Development", "Human Resources"];
+  const jobRoles = [
+    "Sales Executive",
+    "Research Scientist",
+    "Laboratory Technician",
+    "Manufacturing Director",
+    "Healthcare Representative",
+    "Manager",
+  ];
 
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">Attrition Risk Prediction</h1>
+        <h1 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
+          Attrition Risk Prediction
+        </h1>
         <p className="text-gray-600 dark:text-gray-400">
           Enter employee details to predict attrition risk
         </p>
@@ -182,8 +206,14 @@ export default function PredictionPage() {
               {/* Work Info */}
               <div className="sm:col-span-2">
                 <label className="label-text">Department</label>
-                <select name="department" value={formData.department} onChange={handleChange} className="input-field" required>
-                  {departments.map(dept => (
+                <select
+                  name="department"
+                  value={formData.department}
+                  onChange={handleChange}
+                  className="input-field"
+                  required
+                >
+                  {departments.map((dept) => (
                     <option key={dept} value={dept}>
                       {dept}
                     </option>
@@ -193,8 +223,14 @@ export default function PredictionPage() {
 
               <div className="sm:col-span-2">
                 <label className="label-text">Job Role</label>
-                <select name="job_role" value={formData.job_role} onChange={handleChange} className="input-field" required>
-                  {jobRoles.map(role => (
+                <select
+                  name="job_role"
+                  value={formData.job_role}
+                  onChange={handleChange}
+                  className="input-field"
+                  required
+                >
+                  {jobRoles.map((role) => (
                     <option key={role} value={role}>
                       {role}
                     </option>
@@ -217,16 +253,30 @@ export default function PredictionPage() {
 
               <div>
                 <label className="label-text">Overtime</label>
-                <select name="over_time" value={formData.over_time} onChange={handleChange} className="input-field" required>
+                <select
+                  name="over_time"
+                  value={formData.over_time}
+                  onChange={handleChange}
+                  className="input-field"
+                  required
+                >
                   <option value="Yes">Yes</option>
                   <option value="No">No</option>
                 </select>
               </div>
             </div>
 
-            {error && <div className="rounded-lg bg-red-50 p-4 text-red-800 dark:bg-red-900 dark:text-red-100">{error}</div>}
+            {error && (
+              <div className="rounded-lg bg-red-50 p-4 text-red-800 dark:bg-red-900 dark:text-red-100">
+                {error}
+              </div>
+            )}
 
-            <button type="submit" disabled={loading} className="btn-primary w-full">
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary w-full"
+            >
               {loading ? (
                 <>
                   <Loader className="h-4 w-4 animate-spin" />
@@ -246,27 +296,42 @@ export default function PredictionPage() {
         <div>
           {prediction ? (
             <div className="card">
-              <h2 className="mb-6 text-xl font-bold text-gray-900 dark:text-white">Prediction Results</h2>
-              <RiskIndicator riskLevel={prediction.risk_level} probability={prediction.probability} />
+              <h2 className="mb-6 text-xl font-bold text-gray-900 dark:text-white">
+                Prediction Results
+              </h2>
+              <RiskIndicator
+                riskLevel={prediction.risk_level}
+                probability={prediction.probability}
+              />
 
               <div className="mt-6 space-y-4 border-t border-gray-200 pt-6 dark:border-gray-700">
                 <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Probability</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{(prediction.probability * 100).toFixed(1)}%</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Probability
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {(prediction.probability * 100).toFixed(1)}%
+                  </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Model Confidence</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{(prediction.confidence * 100).toFixed(1)}%</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Model Confidence
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {(prediction.confidence * 100).toFixed(1)}%
+                  </p>
                 </div>
               </div>
             </div>
           ) : (
             <div className="card">
-              <p className="text-center text-gray-500 dark:text-gray-400">Fill in the form and click "Get Prediction" to see results</p>
+              <p className="text-center text-gray-500 dark:text-gray-400">
+                Fill in the form and click "Get Prediction" to see results
+              </p>
             </div>
           )}
         </div>
       </div>
     </div>
-  )
+  );
 }

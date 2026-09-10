@@ -2,10 +2,22 @@
 SQLAlchemy ORM models for Employee Attrition database.
 """
 
-from sqlalchemy import Column, Integer, String, Boolean, Float, DateTime, ForeignKey, JSON
-from sqlalchemy.orm import relationship
 from datetime import datetime
+
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+)
+from sqlalchemy.orm import relationship
+
 from app.database import Base
+
 
 class Employee(Base):
     """

@@ -74,6 +74,7 @@ def get_prediction_data(request: PredictionRequest):
         'RelationshipSatisfaction': 3,
         'StockOptionLevel': 1,
         'TrainingTimesLastYear': 3,
+         'YearsSinceLastPromotion': 2, 
         'Gender': 'Male',
         'EducationField': 'Life Sciences'
     }

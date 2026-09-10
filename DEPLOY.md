@@ -1,55 +1,388 @@
 # Deployment Guide - Employee Attrition Prediction
 
-This guide provides step-by-step instructions to deploy the Employee Attrition Prediction application to Render.com.
+Complete guide to deploying the Employee Attrition Prediction application to Render.com.
 
 ## Prerequisites
 
-- GitHub account with the repository pushed
-- Render.com account (sign up at https://render.com)
-- PostgreSQL database (Render managed or external)
+- GitHub account with repository access
+- Render.com account (https://render.com)
+- Git CLI installed and configured
+- Python 3.14+ and Node.js 18+ installed locally
 
-## Deployment Architecture
+## Architecture Overview
 
-The application will be deployed as:
-1. **Frontend**: Static site (React/Vite build) or Web Service
-2. **Backend**: Web Service (FastAPI with Gunicorn)
-3. **Database**: Render PostgreSQL instance
-4. **Environment**: Configuration via environment variables
+```
+┌─────────────────────┐
+│   Static Frontend   │
+│  (React + Vite)     │
+│   render.com/app    │
+└──────────┬──────────┘
+           │ HTTPS
+           ↓
+┌─────────────────────┐
+│   FastAPI Backend   │
+│    (Uvicorn)        │
+│  render.com/api/*   │
+└──────────┬──────────┘
+           │ TCP
+           ↓
+┌─────────────────────┐
+│  PostgreSQL 16      │
+│  (Render Managed)   │
+└─────────────────────┘
+```
 
-## Step-by-Step Deployment
+## Step 1: Prepare Your Repository
 
-### Step 1: Prepare Repository
+### 1.1 Verify All Code is Committed
 
-1. Ensure all changes are committed:
-   ```bash
-   git status
-   git add .
-   git commit -m "Ready for deployment"
-   ```
+```bash
+cd "c:\Users\Prince\Desktop\Employee attrition prediction"
+git status
+git add .
+git commit -m "Production ready - all modules complete"
+```
 
-2. Push to GitHub:
-   ```bash
-   git push origin main
-   ```
+### 1.2 Create Environment Template
 
-3. Create `.env.example` in the backend directory (add to git):
-   ```
-   DATABASE_URL=postgresql://user:password@localhost:5432/attrition_db
-   API_BASE_URL=http://localhost:8000
-   CORS_ORIGINS=["http://localhost:3000", "http://localhost:5173"]
-   ENVIRONMENT=development
-   ```
+Ensure `.env.example` exists in backend:
 
-### Step 2: Create Render PostgreSQL Database
+```bash
+cat > backend/.env.example << 'EOF'
+DATABASE_URL=postgresql://user:password@host:5432/dbname
+PYTHON_ENV=production
+CORS_ORIGINS=["https://your-frontend-domain.onrender.com"]
+EOF
+```
 
-1. Log in to Render.com
-2. Click "New" → "PostgreSQL"
-3. Configure:
-   - Name: `employee-attrition-db`
-   - Database: `attrition_db`
-   - User: `attrition_user`
-   - Region: Choose closest to users
-   - PostgreSQL Version: 14+
+### 1.3 Push to GitHub
+
+```bash
+git push origin main
+# or your default branch
+```
+
+## Step 2: Deploy to Render Using render.yaml
+
+### 2.1 Deploy via Blueprint
+
+1. Log in to Render (https://render.com)
+2. Click **"New"** → **"Blueprint"**
+3. Select **"GitHub"** and authenticate
+4. Choose your repository
+5. Render will automatically read `render.yaml` and create services
+
+### 2.2 Alternative: Manual Service Creation
+
+If Blueprint deployment fails, create services manually:
+
+#### A. Create PostgreSQL Database
+
+1. Dashboard → **"New"** → **"PostgreSQL"**
+2. **Name**: `employee-attrition-db`
+3. **Database**: `attrition_prod`
+4. **User**: `attrition_admin`
+5. **Region**: Oregon (or your preference)
+6. **Plan**: Starter (or Pro for production)
+7. Click **"Create Database"**
+8. **Copy the connection string** (Internal Database URL - safe to use from web services)
+
+#### B. Deploy Backend API
+
+1. Dashboard → **"New"** → **"Web Service"**
+2. **Connect**: Select your GitHub repository
+3. **Settings**:
+   - **Name**: `employee-attrition-api`
+   - **Environment**: `Python`
+   - **Python Version**: `3.14`
+   - **Build Command**:
+     ```bash
+     pip install -r backend/requirements.txt && cd backend && alembic upgrade head
+     ```
+   - **Start Command**:
+     ```bash
+     cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+     ```
+   - **Plan**: Starter/Pro (based on needs)
+   - **Region**: Oregon
+
+4. **Environment Variables**:
+   - `DATABASE_URL`: Paste the PostgreSQL connection string from Step A
+   - `PYTHON_ENV`: `production`
+   - `CORS_ORIGINS`: `["https://your-frontend-url.onrender.com"]`
+   - `PORT`: `10000` (Render-assigned)
+
+5. **Advanced**:
+   - **Auto-Deploy**: ON (redeploy on push to main)
+   - **Health Check Path**: `/api/health`
+   - **Health Check Interval**: 30 seconds
+   - **Timeout**: 30 seconds
+   - **Max Instances**: 3 (autoscaling)
+
+6. Click **"Create Web Service"**
+
+#### C. Deploy Frontend
+
+1. Dashboard → **"New"** → **"Static Site"**
+2. **Connect**: Select your repository
+3. **Settings**:
+   - **Name**: `employee-attrition-app`
+   - **Build Command**:
+     ```bash
+     cd frontend && npm ci && npm run build
+     ```
+   - **Publish Directory**: `frontend/dist`
+   - **Plan**: Starter/Pro
+
+4. **Environment Variables**:
+   - `VITE_API_BASE_URL`: `https://employee-attrition-api.onrender.com`
+     (Replace with your actual backend service URL)
+
+5. **Auto-Deploy**: ON
+
+6. Click **"Create Static Site"**
+
+## Step 3: Configure Environment Variables
+
+After all services are created:
+
+### 3.1 Backend Environment
+
+Update Backend service environment variables:
+
+```
+DATABASE_URL = postgresql://user:pass@host/dbname
+PYTHON_ENV = production
+CORS_ORIGINS = ["https://employee-attrition-app.onrender.com"]
+```
+
+### 3.2 Frontend Environment
+
+Update Static Site environment variables:
+
+```
+VITE_API_BASE_URL = https://employee-attrition-api.onrender.com
+```
+
+## Step 4: Verify Deployment
+
+### 4.1 Check Service Status
+
+- Backend: `https://employee-attrition-api.onrender.com/api/health`
+  - Expected Response: `{"status": "healthy", ...}`
+
+- Frontend: `https://employee-attrition-app.onrender.com`
+  - Should load the prediction form
+
+### 4.2 Test API Endpoints
+
+```bash
+# Health Check
+curl https://employee-attrition-api.onrender.com/api/health
+
+# Create Employee (test data)
+curl -X POST https://employee-attrition-api.onrender.com/api/employees \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "John Doe",
+    "department": "Sales",
+    "job_role": "Sales Executive",
+    "age": 45,
+    "monthly_income": 5500,
+    "years_at_company": 10,
+    "job_satisfaction": 3,
+    "work_life_balance": 3
+  }'
+
+# Get Prediction
+curl -X POST https://employee-attrition-api.onrender.com/api/predict \
+  -H "Content-Type: application/json" \
+  -d '{
+    "age": 45,
+    "monthly_income": 5500,
+    "years_at_company": 10,
+    "years_in_current_role": 5,
+    "years_with_curr_manager": 3,
+    "total_working_years": 15,
+    "job_satisfaction": 3,
+    "work_life_balance": 3,
+    "job_role": "Sales Executive",
+    "department": "Sales",
+    "distance_from_home": 5,
+    "over_time": "No"
+  }'
+```
+
+## Step 5: Production Considerations
+
+### 5.1 Database Backups
+
+Enable automatic backups in Render PostgreSQL dashboard:
+
+- Backup Frequency: Daily
+- Retention Period: 30 days
+- Test restore procedures regularly
+
+### 5.2 Monitoring
+
+Monitor application health:
+
+- Render Dashboard: Check logs, metrics
+- Health endpoint: Regular pings to `/api/health`
+- Error tracking: Implement Sentry/Rollbar for error logging
+
+### 5.3 Performance Optimization
+
+- **Frontend**:
+  - Enable gzip compression in Render
+  - Use CDN caching for static assets
+  - Optimize images and bundle size
+
+- **Backend**:
+  - Use connection pooling for database
+  - Implement query caching for predictions
+  - Scale horizontally with multiple Render Web Service instances
+  - Monitor database connection limits
+
+### 5.4 Security Checklist
+
+- [ ] Environment variables are not committed to Git
+- [ ] CORS_ORIGINS only includes your frontend domain
+- [ ] Database password is unique and strong
+- [ ] PostgreSQL requires authentication
+- [ ] Enable Render's built-in DDoS protection
+- [ ] Use HTTPS everywhere (Render default)
+- [ ] Implement rate limiting for API endpoints
+- [ ] Regular security updates for dependencies
+
+### 5.5 Cost Management
+
+- **Starter Tier** (Development):
+  - Backend: $7/month
+  - Frontend: Free
+  - Database: $7/month
+  - **Total**: ~$14/month
+
+- **Pro Tier** (Production):
+  - Backend: $25/month
+  - Frontend: $20/month
+  - Database: $15/month
+  - **Total**: ~$60/month
+
+## Step 6: Continuous Deployment
+
+### 6.1 Auto-Deploy on Push
+
+Both services have auto-deploy enabled. Deployment workflow:
+
+1. Push changes to `main` branch
+2. GitHub webhook triggers Render
+3. Render rebuilds services
+4. New version automatically deployed
+5. Old instances gracefully shut down
+
+### 6.2 Manual Deployment
+
+To manually redeploy a service:
+
+1. Go to service dashboard
+2. Click **"Manual Deploy"** → **"Deploy latest commit"**
+3. Monitor deployment progress in logs
+
+## Troubleshooting
+
+### Backend Service Won't Start
+
+**Error**: `ModuleNotFoundError: No module named 'app'`
+
+- **Solution**: Ensure build command includes `cd backend` before uvicorn
+
+**Error**: `Database connection failed`
+
+- **Solution**: Verify DATABASE_URL environment variable is correctly set
+
+**Error**: `Application startup complete` but endpoint returns 502
+
+- **Solution**: Check health endpoint path; backend may still be initializing
+
+### Frontend Shows Blank Page
+
+**Error**: API requests fail with 403/CORS
+
+- **Solution**: Update CORS_ORIGINS on backend to include frontend URL
+
+**Error**: Assets return 404
+
+- **Solution**: Verify `frontend/dist` directory exists in build output
+
+### Database Issues
+
+**Error**: `pgvector extension not found`
+
+- **Solution**: Not needed for this project; vector extension is optional
+
+**Error**: `Connection limit exceeded`
+
+- **Solution**: Implement connection pooling; upgrade to Pro tier
+
+## Rollback Procedure
+
+If deployment causes issues:
+
+1. Render Dashboard → Service → **"Deployment History"**
+2. Find previous stable deployment
+3. Click **"Deploy"** next to the older version
+4. Verify `/api/health` returns success
+
+## Monitoring & Logging
+
+### Real-time Logs
+
+Render Dashboard → Service → **"Logs"**
+
+### Environment Variable Changes
+
+To update environment variables without redeploying:
+
+1. Service Settings → **"Environment"**
+2. Edit variables
+3. **"Save"** (this triggers restart)
+
+### Performance Metrics
+
+Check Render dashboard for:
+
+- CPU usage
+- Memory utilization
+- Network bandwidth
+- Request rates
+
+## Disaster Recovery
+
+### Database Restore
+
+1. Render PostgreSQL Dashboard → **"Backups"**
+2. Select backup timestamp
+3. Click **"Restore"**
+4. Data restored to new database instance
+
+### Code Rollback
+
+1. Go to GitHub → Releases/Tags
+2. Create deployment from previous stable version
+3. Push to main branch
+4. Render redeploys automatically
+
+## Support & Resources
+
+- **Render Documentation**: https://render.com/docs
+- **Render Community**: https://render.com/community
+- **FastAPI Docs**: https://fastapi.tiangolo.com
+- **React Docs**: https://react.dev
+- **PostgreSQL Docs**: https://www.postgresql.org/docs/
+  - Region: Choose closest to users
+  - PostgreSQL Version: 14+
+
 4. Click "Create Database"
 5. Copy the Internal Database URL (you'll need this)
 
@@ -60,11 +393,11 @@ The application will be deployed as:
 3. Configure:
    - **Name**: `employee-attrition-api`
    - **Environment**: Python 3
-   - **Build Command**: 
+   - **Build Command**:
      ```bash
      pip install -r backend/requirements.txt && cd backend && alembic upgrade head
      ```
-   - **Start Command**: 
+   - **Start Command**:
      ```bash
      cd backend && gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker
      ```
@@ -157,33 +490,37 @@ The application will be deployed as:
 ## Troubleshooting
 
 ### Database Connection Failed
+
 - Check `DATABASE_URL` is correctly set
 - Verify Render PostgreSQL is running
 - Ensure firewall allows Render IP
 
 ### CORS Errors in Frontend
+
 - Check backend `CORS_ORIGINS` includes frontend URL
 - Restart backend service after updating environment variables
 
 ### Build Failures
+
 - Check build logs in Render dashboard
 - Verify all dependencies are in requirements.txt and package.json
 - Ensure Python/Node versions are compatible
 
 ### Slow Deployments
+
 - Upgrade to a higher plan if hitting timeout limits
 - Optimize dependencies (remove unused packages)
 - Use production builds and not development dependencies
 
 ## Environment Variables Reference
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `DATABASE_URL` | Yes | PostgreSQL connection string |
-| `API_BASE_URL` | Yes | Base URL for the API |
-| `CORS_ORIGINS` | Yes | Allowed frontend origins (JSON array) |
-| `ENVIRONMENT` | Yes | `production` or `development` |
-| `PYTHONUNBUFFERED` | No | Set to `1` to see real-time logs |
+| Variable           | Required | Description                           |
+| ------------------ | -------- | ------------------------------------- |
+| `DATABASE_URL`     | Yes      | PostgreSQL connection string          |
+| `API_BASE_URL`     | Yes      | Base URL for the API                  |
+| `CORS_ORIGINS`     | Yes      | Allowed frontend origins (JSON array) |
+| `ENVIRONMENT`      | Yes      | `production` or `development`         |
+| `PYTHONUNBUFFERED` | No       | Set to `1` to see real-time logs      |
 
 ## Rollback
 

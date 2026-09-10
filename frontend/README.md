@@ -57,11 +57,13 @@ frontend/
 ### Installation
 
 1. Navigate to frontend directory:
+
    ```bash
    cd frontend
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    ```
@@ -127,6 +129,7 @@ The frontend communicates with the FastAPI backend via the `apiService` module i
 Interactive form for entering employee details and getting attrition predictions.
 
 **Features:**
+
 - 12-field form for employee information
 - Real-time form validation
 - Visual risk indicator with probability gauge
@@ -138,12 +141,14 @@ Interactive form for entering employee details and getting attrition predictions
 Organization-wide analytics and insights.
 
 **Metrics:**
+
 - Total employees count
 - Number at risk with percentage
 - Overall attrition rate
 - Model accuracy
 
 **Visualizations (Ready for integration):**
+
 - Attrition by department
 - Attrition by age group
 - Attrition by salary band
@@ -154,6 +159,7 @@ Organization-wide analytics and insights.
 Employee records management.
 
 **Features:**
+
 - Add new employee records
 - View all employees with pagination
 - Search by name or job role
@@ -164,19 +170,25 @@ Employee records management.
 ## Component Architecture
 
 ### Navbar
+
 Navigation component with:
+
 - Page switcher (Prediction, Dashboard, Employees)
 - Dark/light mode toggle
 - Branding
 
 ### RiskIndicator
+
 Visual component for displaying:
+
 - Risk level badge (Low/Medium/High with color coding)
 - Probability percentage
 - Risk gauge with progressive indicator
 
 ### API Service
+
 Centralized API client with:
+
 - Type-safe request/response models
 - Error handling
 - Health check endpoint
@@ -187,6 +199,7 @@ Centralized API client with:
 ### Tailwind CSS
 
 The project uses Tailwind CSS for styling with:
+
 - Custom color palette (primary: sky blue)
 - Dark mode support
 - Utility classes
@@ -242,6 +255,7 @@ npm run build
 ```
 
 The `dist/` directory contains the static files ready for deployment:
+
 - Minified JavaScript
 - Optimized CSS
 - Bundled assets

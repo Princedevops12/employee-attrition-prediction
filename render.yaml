@@ -1,0 +1,60 @@
+services:
+  # Backend API Service
+  - type: web
+    name: employee-attrition-backend
+    env: python
+    pythonVersion: 3.14
+    plan: starter
+    buildCommand: "pip install -r backend/requirements.txt && cd backend && alembic upgrade head"
+    startCommand: "cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: DATABASE_URL
+        value: $DATABASE_URL
+      - key: PYTHON_ENV
+        value: "production"
+      - key: CORS_ORIGINS
+        fromDatabase:
+          name: db
+          property: connectionString
+    regions:
+      - name: oregon
+    scaling:
+      minInstances: 1
+      maxInstances: 3
+      targetMemoryUtilizationPercentage: 70
+
+  # Frontend Static Site
+  - type: static_site
+    name: employee-attrition-frontend
+    plan: starter
+    buildCommand: "cd frontend && npm ci && npm run build"
+    staticPublishPath: "frontend/dist"
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: "https://employee-attrition-backend.onrender.com"
+    regions:
+      - name: oregon
+    routes:
+      - path: "/"
+        destination: "index.html"
+      - path: "/*"
+        destination: "/index.html"
+
+  # PostgreSQL Database
+  - type: pserv
+    name: employee-attrition-db
+    plan: starter
+    postgresVersion: "16"
+    region: oregon
+
+databases:
+  - name: attrition_db
+    dbName: attrition_production
+    user: attrition_user
+    region: oregon
+
+envVarGroups:
+  - name: database
+    envVars:
+      - key: DATABASE_URL
+        value: "postgresql://attrition_user:${DB_PASSWORD}@db-service:5432/attrition_production"
