@@ -66,9 +66,76 @@
   - Hash: 1efd886
   - Files: 10 files, 1148 insertions
 
+- **Commit 2** (Modules 2 & 3): ML pipeline scripts and FastAPI backend structure
+  - Hash: 8aa6c6d
+  - Files: 18 files changed, 1803 insertions
+  - Includes: ML scripts (acquire_data.py, preprocessing.py, train.py, predict.py)
+  - Backend API complete with database models, schemas, routes
+
+- **Commit 3** (Module 6): Complete React frontend
+  - Hash: 4f2013f
+  - Files: 16 files changed, 1125 insertions
+  - Includes: React components, pages, services, Vite/Tailwind config
+  - Frontend-API integration ready
+
 ---
 
-## Module 2: Dataset Acquisition & EDA
+## Module 6: Frontend UI Development
+
+### Sub-tasks
+
+#### 6.1 Project Configuration
+- **Status**: ✅ COMPLETED
+- **Files**:
+  - `frontend/vite.config.ts` - Vite build config with API proxy
+  - `frontend/tsconfig.json` - TypeScript strict mode config
+  - `frontend/tailwind.config.ts` - Tailwind CSS theme
+  - `frontend/postcss.config.js` - PostCSS for Tailwind
+  - `frontend/.eslintrc.cjs` - ESLint configuration
+  - `frontend/.env.local` - Environment variables template
+
+#### 6.2 Core Pages
+- **Status**: ✅ COMPLETED
+- **Files**:
+  - `PredictionPage.tsx` - Employee attrition prediction form with results
+  - `DashboardPage.tsx` - Organization analytics and metrics
+  - `EmployeesPage.tsx` - CRUD operations for employee records
+
+#### 6.3 Components
+- **Status**: ✅ COMPLETED
+- **Components**:
+  - `Navbar.tsx` - Navigation with page switching and dark mode
+  - `RiskIndicator.tsx` - Visual risk display with gauge
+  - `RiskIndicator.tsx` - Reusable risk visualization component
+
+#### 6.4 Services & Integration
+- **Status**: ✅ COMPLETED
+- **Files**:
+  - `services/api.ts` - Full API client with type-safe interfaces
+  - Endpoints: predictions, employees, model metrics, health check
+
+#### 6.5 Styling & Layout
+- **Status**: ✅ COMPLETED
+- **Details**:
+  - Tailwind CSS for utility-first styling
+  - Dark/light mode with toggle
+  - Responsive grid layouts
+  - Custom Tailwind components (.card, .btn-primary, .input-field)
+  - Lucide React icons throughout
+
+#### 6.6 Entry Point
+- **Status**: ✅ COMPLETED
+- **Files**:
+  - `src/main.tsx` - React entry point
+  - `src/App.tsx` - Main app component with routing logic
+  - `src/index.css` - Global Tailwind directives
+  - `index.html` - HTML template
+
+### Module 6 Status: ✅ COMPLETE
+**Note**: Full React frontend implemented with all UI components, styling, and API integration ready for backend.
+**Next**: Test integration with running backend API
+
+---
 
 ### Sub-tasks
 
