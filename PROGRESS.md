@@ -10,6 +10,7 @@
   - Initialized empty Git repository
   - Configured git user (Attrition Dev)
   - Created `.gitignore` with comprehensive ignore patterns
+  - First commit made: "Module 1: Initial repo setup..."
 
 #### 1.2 Create Folder Structure
 - **Status**: ✅ COMPLETED
@@ -18,47 +19,214 @@
   - Created `/backend` - FastAPI backend API
   - Created `/frontend` - React frontend
   - Created `/.vscode` - VS Code configuration
-  - Created `/data` - Shared data storage
+  - All directories visible in git status
 
 #### 1.3 Create Configuration Files
 - **Status**: ✅ COMPLETED
 - **Details**:
-  - `.vscode/settings.json` - Python interpreter path, formatting, linting
-  - `.vscode/launch.json` - Debug configurations for FastAPI and ML scripts
-  - `.vscode/tasks.json` - Tasks for setup, dependencies, running services
-  - `.vscode/extensions.json` - Recommended VS Code extensions
-  - `.gitignore` - Python, Node, IDE, environment variables
+  - `.vscode/settings.json` - Python interpreter, formatting, linting
+  - `.vscode/launch.json` - Debug configurations for FastAPI and ML
+  - `.vscode/tasks.json` - Build/run tasks with dependencies
+  - `.vscode/extensions.json` - Recommended extensions
+  - `backend/.env.example` - Environment variable template
 
-#### 1.4 Create Requirements Files
+#### 1.4 Create Requirements Files & Documentation
 - **Status**: ✅ COMPLETED
 - **Details**:
-  - `ml/requirements.txt` - pandas, scikit-learn, xgboost, jupyter, etc.
-  - `backend/requirements.txt` - fastapi, sqlalchemy, psycopg2, alembic, pytest, etc.
-  - `frontend/package.json` - React, Vite, Tailwind, Recharts, Axios, etc.
+  - `ml/requirements.txt` - pandas, scikit-learn, xgboost, jupyter
+  - `backend/requirements.txt` - fastapi, sqlalchemy, alembic, pytest
+  - `frontend/package.json` - React, Vite, Tailwind, Recharts
+  - Root `README.md` - Project overview, architecture, setup guide
+  - `DEPLOY.md` - Render deployment instructions
+  - Module-specific READMEs
 
-#### 1.5 Create Documentation
-- **Status**: ✅ COMPLETED
+#### 1.5 Python Virtual Environments
+- **Status**: ✅ IN PROGRESS
 - **Details**:
-  - `README.md` - Project overview, architecture, setup instructions
-  - `PROGRESS.md` - This file, tracking build progress
+  - ML venv created and pip upgrade initiated
+  - ML dependencies installing (pandas, numpy, scikit-learn, xgboost, etc.)
+  - Backend venv created and pip upgrade initiated
+  - Backend dependencies installing (fastapi, sqlalchemy, alembic, pytest, etc.)
+  - Frontend npm install initiated
 
-### Module 1 Status: ✅ COMPLETE
+### Module 1 Status: ✅ COMPLETE (Environment setup in final stages)
 
-**Next Steps**: Verify venv creation and run `npm install` in integrated terminal. Then commit as checkpoint and proceed to Module 2 (Dataset).
+**Checkpoint**: Initial commit made successfully
+**Next Steps**: 
+1. Wait for pip/npm installations to complete
+2. Verify venv activation works in integrated terminal
+3. Commit environment setup
+4. Begin Module 2 (Dataset Acquisition & EDA)
 
 ---
 
 ## Checkpoint Commits
 
 - **Commit 1** (Module 1): Initial repo setup with folder structure and configuration
+  - Hash: 1efd886
+  - Files: 10 files, 1148 insertions
 
 ---
 
-## Notes
+## Module 2: Dataset Acquisition & EDA
 
-- Project uses Windows terminals (PowerShell/CMD)
-- All commands executed in VS Code integrated terminal
-- Virtual environments use venv (not conda)
-- PostgreSQL setup deferred to Module 4; local dev can use SQLite
+### Sub-tasks
+
+#### 2.1 Data Acquisition Script
+- **Status**: ✅ COMPLETED
+- **File**: `ml/acquire_data.py`
+- **Details**:
+  - Created script to load IBM HR Analytics dataset or generate synthetic data
+  - Synthetic dataset generation: 1,470 records with 34 features
+  - Includes realistic attrition distribution (~16% attrition rate)
+  - Features all required columns: Age, Income, Tenure, Satisfaction, etc.
+
+#### 2.2 Exploratory Data Analysis
+- **Status**: ✅ COMPLETED (Script Created)
+- **File**: `ml/acquire_data.py` - `explore_data()` function
+- **Details**:
+  - Dataset shape and structure analysis
+  - Missing value detection
+  - Target variable distribution (Attrition)
+  - Numeric summary statistics
+  - Categorical feature enumeration
+  - EDA report generation (JSON)
+
+#### 2.3 Preprocessing Pipeline
+- **Status**: ✅ COMPLETED
+- **File**: `ml/preprocessing.py`
+- **Details**:
+  - Scikit-learn ColumnTransformer pipeline
+  - Numeric features: StandardScaler (22 features)
+  - Categorical features: OneHotEncoder with drop='first' (6 features)
+  - Train/test split: 80/20 with stratification
+  - Class imbalance handling via stratify
+  - Preprocessor serialization (joblib)
+
+#### 2.4 Model Training Pipeline
+- **Status**: ✅ COMPLETED
+- **File**: `ml/train.py`
+- **Details**:
+  - RandomForestClassifier with 100 estimators
+  - XGBoost optional (if available)
+  - Model evaluation metrics:
+    - Accuracy, Precision, Recall, F1-Score
+    - ROC-AUC score
+    - Confusion matrix
+  - Best model selection (highest F1-score)
+  - Model and metrics serialization
+
+#### 2.5 Inference Script
+- **Status**: ✅ COMPLETED
+- **File**: `ml/predict.py`
+- **Details**:
+  - AttritionPredictor class for loading model/preprocessor
+  - Single prediction method
+  - Batch prediction method
+  - Risk level classification (Low/Medium/High)
+  - Confidence scoring
+
+### Module 2 Status: 🔄 IN PROGRESS
+**Note**: Scripts created, ready for execution once Python environment setup complete.
+**Next**: Execute `acquire_data.py` → `train.py` → verify with `predict.py`
+
+---
+
+## Module 3: ML Model Training (Backend Integration Ready)
+
+### Sub-tasks
+
+#### 3.1 Backend Application Structure
+- **Status**: ✅ COMPLETED
+- **Files**: 
+  - `backend/app/main.py` - FastAPI app with CORS, lifespan, routers
+  - `backend/app/database.py` - SQLAlchemy setup with SQLite/PostgreSQL support
+  - `backend/app/models.py` - ORM models (Employee, Prediction, ModelMetrics)
+  - `backend/app/schemas.py` - Pydantic validation models
+  - `backend/app/routes/health.py` - Health check endpoint
+  - `backend/app/routes/predictions.py` - Prediction endpoints (single, batch, metrics)
+  - `backend/app/routes/employees.py` - Employee CRUD operations
+
+#### 3.2 Database Models
+- **Status**: ✅ COMPLETED
+- **Models**:
+  - `Employee` - Employee records with personal/job details
+  - `Prediction` - Attrition predictions with probability and risk level
+  - `ModelMetrics` - Model performance metrics tracking
+  - Relationships and cascade delete configured
+
+#### 3.3 API Endpoints
+- **Status**: ✅ COMPLETED (Structure)
+- **Endpoints**:
+  - `GET /api/health` - Health check
+  - `POST /api/predict` - Single employee prediction
+  - `POST /api/predict/batch` - CSV batch prediction
+  - `GET /api/model/metrics` - Model performance metrics
+  - `POST /api/employees` - Create employee
+  - `GET /api/employees` - List employees (with filtering, pagination)
+  - `GET /api/employees/{id}` - Get employee with predictions
+  - `PUT /api/employees/{id}` - Update employee
+  - `DELETE /api/employees/{id}` - Delete employee
+  - `GET /api/employees/department/{dept}/stats` - Department statistics
+
+#### 3.4 Testing Structure
+- **Status**: ✅ COMPLETED
+- **Files**:
+  - `backend/tests/test_health.py` - Unit tests for health endpoint
+  - `backend/tests/http/api.http` - REST Client testing file for VS Code
+  - Test structure ready for pytest execution
+
+### Module 3 Status: 🔄 IN PROGRESS (Environment setup pending)
+**Structure complete and ready**: All backend code written, dependencies configured, awaiting Python venv completion and testing.
+
+---
+
+## Checkpoint Commits
+
+- **Commit 2** (Modules 2 & 3): ML scripts and backend API structure (PENDING)
+
+---
+
+## Installation Status
+
+### ML Module
+- Python venv: ✅ Created
+- Dependencies: ⏳ Installing (pandas, numpy, scikit-learn, xgboost, jupyter)
+- ML scripts: ✅ Complete (acquire_data.py, preprocessing.py, train.py, predict.py)
+
+### Backend Module
+- Python venv: ✅ Created
+- Dependencies: ⏳ Installing (fastapi, sqlalchemy, alembic, pytest, httpx)
+- Backend code: ✅ Complete (all routes, models, schemas, database)
+
+### Frontend Module
+- Node.js: ✅ Ready
+- npm install: ⏳ Initiated
+- Frontend code: ⏳ To be created (React components, pages, services)
+
+---
+
+## Next Major Steps
+
+1. ✅ Module 1: Repo & Environment Setup - COMPLETE
+2. 🔄 Module 2: Dataset & EDA - Scripts ready, execution pending
+3. 🔄 Module 3: ML Model & Backend API - Code complete, venv pending
+4. ⏳ Module 4: Database Migrations - Alembic scripts to create
+5. ⏳ Module 5: Integration Testing - Backend/ML integration
+6. ⏳ Module 6: Frontend UI - React components
+7. ⏳ Module 7: Render Deployment - Configuration & deployment
+
+---
+
+## Technical Notes
+
+- **Python 3.14.0** available and ready
+- **SQLite** for local dev, **PostgreSQL** for production (Render)
+- **Git** initialized with checkpoint commits
+- **Virtual environments** isolated per module (ML, Backend separate)
+- **CORS** configured for localhost dev (3000, 5173)
+- **Pydantic v2** with proper validation and JSON schemas
+- **SQLAlchemy 2.0** with async ready (current using sync)
+
 
 ---

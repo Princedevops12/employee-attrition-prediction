@@ -1,0 +1,79 @@
+### Employee Attrition Prediction API - REST Client Requests
+
+# Replace localhost with your server URL if testing against a deployed instance
+@baseUrl = http://localhost:8000
+
+### Health Check
+GET {{baseUrl}}/api/health
+
+### Get Model Metrics
+GET {{baseUrl}}/api/model/metrics
+
+### Single Employee Prediction
+POST {{baseUrl}}/api/predict
+Content-Type: application/json
+
+{
+  "age": 45,
+  "monthly_income": 5500,
+  "years_at_company": 10,
+  "years_in_current_role": 5,
+  "years_with_curr_manager": 3,
+  "total_working_years": 15,
+  "job_satisfaction": 3,
+  "work_life_balance": 3,
+  "job_role": "Sales Executive",
+  "department": "Sales",
+  "distance_from_home": 5,
+  "over_time": "No"
+}
+
+### Create Employee Record
+POST {{baseUrl}}/api/employees
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "department": "Sales",
+  "job_role": "Sales Executive",
+  "age": 45,
+  "gender": "Male",
+  "monthly_income": 5500,
+  "years_at_company": 10,
+  "job_satisfaction": 3,
+  "work_life_balance": 3
+}
+
+### List All Employees
+GET {{baseUrl}}/api/employees
+
+### List Employees with Pagination
+GET {{baseUrl}}/api/employees?skip=0&limit=10
+
+### Filter Employees by Department
+GET {{baseUrl}}/api/employees?department=Sales
+
+### Get Specific Employee
+GET {{baseUrl}}/api/employees/1
+
+### Update Employee
+PUT {{baseUrl}}/api/employees/1
+Content-Type: application/json
+
+{
+  "name": "John Doe Updated",
+  "job_satisfaction": 4
+}
+
+### Delete Employee
+DELETE {{baseUrl}}/api/employees/1
+
+### Get Department Statistics
+GET {{baseUrl}}/api/employees/department/Sales/stats
+
+### Batch Prediction (requires CSV file)
+# Note: This would require uploading a CSV file
+# POST {{baseUrl}}/api/predict/batch
+# Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+# Note: Add CSV file upload here when testing
