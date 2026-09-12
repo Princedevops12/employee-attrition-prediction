@@ -44,7 +44,11 @@ import json
 try:
     origins = json.loads(cors_origins)
 except (json.JSONDecodeError, TypeError):
-    origins = ["http://localhost:3000", "http://localhost:5173"]
+    origins = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "https://employee-attrition-prediction-2-4olh.onrender.com",
+]
 
 app.add_middleware(
     CORSMiddleware,
